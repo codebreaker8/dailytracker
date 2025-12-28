@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="icon" href="icon.png" type="image/png">
+      <link rel="icon" href="icon.png" type="image/png">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon"  href="icon.png">
 <title>Productivity Planner</title>
@@ -21,7 +21,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg); color: var(--text); transition: 0.3s; }
-.wrap { max-width: 1200px; margin: 20px auto; padding: 20px; }
+.wrap { max-width: 1400px; margin: 20px auto; padding: 20px; }
 
 header { display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--accent); }
@@ -52,7 +52,7 @@ h1 { font-size: 28px; font-weight: 800; background: linear-gradient(90deg, #4f46
   background: var(--accent); border-radius: 3px; }
 
 .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--grid); }
-table { border-collapse: collapse; width: 100%; min-width: 900px; }
+table { border-collapse: collapse; width: 100%; min-width: 1000px; }
 thead th { padding: 14px 6px; border-bottom: 2px solid var(--accent);
   font-size: 12px; text-align: center; color: var(--text2); background: var(--bg2); }
 .day-header { display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -60,11 +60,12 @@ thead th { padding: 14px 6px; border-bottom: 2px solid var(--accent);
 .day-name { font-size: 10px; color: var(--text2); text-transform: uppercase; }
 .today-marker { width: 6px; height: 6px; background: #ef4444;
   border-radius: 50%; margin-top: 2px; }
-.protocol-name { width: 220px; padding: 12px 16px; text-align: left;
+.protocol-name { width: 300px; padding: 12px 16px; text-align: left;
   font-weight: 600; font-size: 14px; background: var(--bg2);
   position: sticky; left: 0; border-right: 2px solid var(--accent); }
 .protocol-name input { width: 100%; border: none; background: transparent;
-  font-size: 14px; color: var(--text); padding: 6px 8px; border-radius: 4px; }
+  font-size: 14px; color: var(--text); padding: 8px 10px; border-radius: 4px;
+  min-height: 40px; }
 .protocol-name input:focus { outline: none; background: rgba(79, 70, 229, 0.05); }
 td.cell { width: 42px; height: 42px; border: 1px solid var(--protocol-border);
   text-align: center; cursor: pointer; transition: all 0.2s; font-size: 16px;
@@ -80,7 +81,13 @@ td.neutral { background: #fbbf24; color: white; border-color: #fbbf24; }
 .hour-label { font-size: 13px; font-weight: 700; color: var(--text);
   text-align: right; height: 28px; display: flex; align-items: center;
   justify-content: flex-end; padding-right: 8px; }
-.hour-label:nth-child(1) { color: #ef4444; } .hour-label:nth-child(2) { color: #f97316; } .hour-label:nth-child(3) { color: #f59e0b; } .hour-label:nth-child(4) { color: #84cc16; } .hour-label:nth-child(5) { color: #0ea5e9; } .hour-label:nth-child(6) { color: #8b5cf6; } .screen-grid { flex: 1; }
+.hour-label:nth-child(1) { color: #ef4444; }
+.hour-label:nth-child(2) { color: #f97316; }
+.hour-label:nth-child(3) { color: #f59e0b; }
+.hour-label:nth-child(4) { color: #84cc16; }
+.hour-label:nth-child(5) { color: #0ea5e9; }
+.hour-label:nth-child(6) { color: #8b5cf6; }
+.screen-grid { flex: 1; }
 .dates-row { display: flex; gap: 2px; margin-bottom: 12px;
   padding-left: 4px; border-bottom: 2px solid var(--grid); padding-bottom: 8px; }
 .date-cell { width: 32px; text-align: center; font-size: 12px;
@@ -203,11 +210,11 @@ td.neutral { background: #fbbf24; color: white; border-color: #fbbf24; }
     <div class="ach-grid">
       <div class="ach-item" data-idx="0">
         <div class="ach-dot" id="ach0"></div>
-        <div><strong>Consistency Master</strong><br><small>Complete all protocols for 25+ consecutive days</small></div>
+        <div><strong>Consistency Master</strong><br><small>Complete all protocols for 7 consecutive days</small></div>
       </div>
       <div class="ach-item" data-idx="1">
         <div class="ach-dot" id="ach1"></div>
-        <div><strong>Screen Time Control</strong><br><small>Keep screen time under 4h for daily</small></div>
+        <div><strong>Screen Time Control</strong><br><small>Keep screen time under 4h for 5 days in a row</small></div>
       </div>
       <div class="ach-item" data-idx="2">
         <div class="ach-dot" id="ach2"></div>
@@ -223,13 +230,11 @@ td.neutral { background: #fbbf24; color: white; border-color: #fbbf24; }
 </div>
 
 <script>
-
 const DAYS = 31, ROWS = 10;
 const HOUR_LEVELS = ['2h','3h','4h','5h','6h','7h+'];
-const STORAGE_KEY = "planner_ultimate";
+const STORAGE_KEY = "planner_final";
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const DAYS_NAME = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-
 
 let state = {
   currentMonth: new Date().getFullYear() + "-" + (new Date().getMonth()+1).toString().padStart(2,'0'),
@@ -237,14 +242,12 @@ let state = {
   theme: "light"
 };
 
-
 function init() {
   loadState();
   setupTheme();
   renderAll();
   setInterval(saveState, 3000);
 }
-
 
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -262,8 +265,8 @@ function createMonth(key) {
     name: MONTHS[m-1] + " " + y,
     level: 1,
     protocols: Array.from({length:ROWS},(_,i)=>`Protocol ${i+1}`),
-    cells: {}, 
-    screen: Array(DAYS).fill(-1), 
+    cells: {},
+    screen: Array(DAYS).fill(-1),
     achievements: [false,false,false],
     createdAt: new Date().toISOString()
   };
@@ -272,7 +275,6 @@ function createMonth(key) {
 function currentMonth() {
   return state.months[state.currentMonth];
 }
-
 
 function setupTheme() {
   document.getElementById('themeToggle').onclick = () => {
@@ -283,12 +285,10 @@ function setupTheme() {
   document.body.classList.toggle('dark', state.theme === "dark");
 }
 
-
 function renderProtocols() {
   const cm = currentMonth();
   const today = new Date();
   const isCurrentMonth = state.currentMonth === `${today.getFullYear()}-${today.getMonth()+1}`;
-  
   
   let thead = '<tr><th class="protocol-name">PROTOCOL</th>';
   for(let d=1; d<=DAYS; d++) {
@@ -303,7 +303,6 @@ function renderProtocols() {
   }
   thead += '</tr>';
   document.querySelector('#protocolTable thead').innerHTML = thead;
-  
   
   let tbody = '';
   for(let r=0; r<ROWS; r++) {
@@ -326,7 +325,7 @@ function renderProtocols() {
 function toggleProtocol(r,d) {
   const key = `${r}_${d}`;
   const cm = currentMonth();
-  cm.cells[key] = ((cm.cells[key] || 0) + 1) % 4; 
+  cm.cells[key] = ((cm.cells[key] || 0) + 1) % 4;
   renderProtocols();
   updateStats();
   saveState();
@@ -337,12 +336,10 @@ function updateProtocol(r,val) {
   saveState();
 }
 
-
 function renderScreenTime() {
   const cm = currentMonth();
   const today = new Date();
   const isCurrentMonth = state.currentMonth === `${today.getFullYear()}-${today.getMonth()+1}`;
-  
   
   let dates = '';
   for(let d=1; d<=DAYS; d++) {
@@ -350,7 +347,6 @@ function renderScreenTime() {
     dates += `<div class="date-cell ${isToday?'today':''}">${d}</div>`;
   }
   document.getElementById('datesRow').innerHTML = dates;
-  
   
   let dotsHTML = '';
   for(let hourIdx = HOUR_LEVELS.length-1; hourIdx >= 0; hourIdx--) {
@@ -370,7 +366,6 @@ function renderScreenTime() {
 
 function setScreenHour(day, hourLevel) {
   const cm = currentMonth();
-  
   cm.screen[day] = cm.screen[day] === hourLevel ? -1 : hourLevel;
   renderScreenTime();
   updateStats();
@@ -385,18 +380,15 @@ function drawGraph() {
   canvas.width = rect.width;
   canvas.height = rect.height;
   
-  
   const hours = cm.screen.map(level => {
     if (level === -1) return 0;
     if (level === 5) return 7;
     return level + 2;
   });
   
-  
   const maxH = Math.max(7, ...hours);
   const w = canvas.width - 40, h = canvas.height - 30;
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  
   
   ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid');
   ctx.lineWidth = 1;
@@ -407,12 +399,10 @@ function drawGraph() {
     ctx.lineTo(30+w, y);
     ctx.stroke();
     
-    
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text2');
     ctx.font = "10px sans-serif";
     ctx.fillText(`${5-i}h`, 15, y+3);
   }
-  
   
   ctx.beginPath();
   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -429,14 +419,12 @@ function drawGraph() {
   }
   ctx.stroke();
   
-  
   const today = new Date();
   const isCurrentMonth = state.currentMonth === `${today.getFullYear()}-${today.getMonth()+1}`;
   
   for(let d=0; d<DAYS; d++) {
     const x = 30 + (d/(DAYS-1))*w;
     const y = 15 + (1 - hours[d]/maxH)*h;
-    
     
     ctx.beginPath();
     ctx.arc(x,y,6,0,Math.PI*2);
@@ -445,7 +433,6 @@ function drawGraph() {
     ctx.strokeStyle = '#8b5cf6';
     ctx.lineWidth = 2;
     ctx.stroke();
-    
     
     if (isCurrentMonth && d+1 === today.getDate()) {
       ctx.beginPath();
@@ -456,7 +443,6 @@ function drawGraph() {
     }
   }
 }
-
 
 function renderAchievements() {
   const cm = currentMonth();
@@ -471,7 +457,6 @@ function renderAchievements() {
     };
   });
 }
-
 
 function renderHistory() {
   let html = '';
@@ -503,18 +488,15 @@ function switchMonth(key) {
   renderAll();
 }
 
-
 function updateStats() {
   const cm = currentMonth();
   const today = new Date();
   const isCurrentMonth = state.currentMonth === `${today.getFullYear()}-${today.getMonth()+1}`;
   
-  
   const total = ROWS * DAYS;
   const done = Object.values(cm.cells).filter(v=>v===1).length;
   const progress = total ? Math.round((done/total)*100) : 0;
   document.getElementById('progressStat').textContent = progress + '%';
-  
   
   document.getElementById('levelStat').textContent = cm.level;
   document.getElementById('levelStat').onclick = () => {
@@ -522,7 +504,6 @@ function updateStats() {
     updateStats();
     saveState();
   };
-  
   
   let todayHours = 0;
   if (isCurrentMonth) {
@@ -534,7 +515,6 @@ function updateStats() {
   }
   document.getElementById('screenStat').textContent = todayHours + 'h';
   
-  
   document.getElementById('monthName').textContent = cm.name;
   if (isCurrentMonth) {
     const dayName = DAYS_NAME[today.getDay()];
@@ -543,7 +523,6 @@ function updateStats() {
     document.getElementById('todayDisplay').textContent = 'Not current month';
   }
 }
-
 
 document.getElementById('resetBtn').onclick = () => {
   if(confirm('Reset all data for current month?')) {
@@ -556,7 +535,6 @@ document.getElementById('resetBtn').onclick = () => {
   }
 };
 
-
 function renderAll() {
   renderProtocols();
   renderScreenTime();
@@ -565,9 +543,7 @@ function renderAll() {
   updateStats();
 }
 
-
 init();
 </script>
 </body>
-
 </html>
